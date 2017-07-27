@@ -1,45 +1,34 @@
 package fr.lteconsulting.modele;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import fr.lteconsulting.dao.DisqueDAO;
 
 public class Bibliotheque
 {
-	private Map<String, Disque> disques = new HashMap<>();
+	DisqueDAO disqueDao=new DisqueDAO();
 
 	public void ajouterDisque( Disque disque )
 	{
-		disques.put( disque.getCodeBarre(), disque );
+		disqueDao.add(disque);
 	}
 
 	public List<Disque> getDisques()
 	{
-		return new ArrayList<>( disques.values() );
+		return disqueDao.findAll();
 	}
 
 	public Disque rechercherDisqueParCodeBarre( String codeBarre )
 	{
-		return disques.get( codeBarre );
+		return disqueDao.findById(codeBarre);
 	}
 
 	public List<Disque> rechercherDisqueParNom( String recherche )
 	{
-		recherche = recherche.toLowerCase();
-
-		List<Disque> resultat = new ArrayList<>();
-
-		for( Disque disque : disques.values() )
-		{
-			if( disque.getNom().toLowerCase().contains( recherche ) )
-				resultat.add( disque );
-		}
-
-		return resultat;
+		return disqueDao.findByName(recherche);
 	}
 
-	public List<Disque> rechercherDisqueParNom( List<String> termes )
+/*	public List<Disque> rechercherDisqueParNom( List<String> termes )
 	{
 		List<Disque> resultat = new ArrayList<>();
 
@@ -60,12 +49,15 @@ public class Bibliotheque
 		}
 
 		return resultat;
-	}
+	}*/
 
 	public void afficher()
 	{
+		List<Disque> disques = disqueDao.findAll();
 		System.out.println( "BIBLIOTHEQUE avec " + disques.size() + " disques" );
-		for( Disque disque : disques.values() )
+		for(Disque disque:disques){
 			disque.afficher();
+		}
+		
 	}
 }

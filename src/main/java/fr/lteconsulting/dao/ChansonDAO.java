@@ -5,15 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import fr.lteconsulting.modele.Disque;
+import fr.lteconsulting.modele.Chanson;
 
-public class DisqueDAO {
+public class ChansonDAO{
 	private Connection connection;
 
-	public DisqueDAO() {
+	public ChansonDAO() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bibliotheque_audio", "root", "root");
@@ -24,16 +22,17 @@ public class DisqueDAO {
 		}
 	}
 
-	public Disque findById(String id) {
+	public Chanson findByIdChanson(int id) {
 		try {
-			String sql = "SELECT * FROM `disques` WHERE id = ?";
+			String sql = "SELECT * FROM `chansons` WHERE id = ? ";
 			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setString(1, id);
+			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				String nom = resultSet.getString("nom");
-				Disque disque = new Disque(id, nom);
-				return disque;
+				int dureeEnSecondes = resultSet.getInt("duree");
+				Chanson chanson = new Chanson(nom,dureeEnSecondes);
+				return chanson;
 			} else {
 				return null;
 			}
@@ -41,8 +40,29 @@ public class DisqueDAO {
 			throw new RuntimeException("Impossible de réaliser l(es) opération(s)", e);
 		}
 	}
-
 	
+	/*public List<Chanson> findChansonByIdDisque(String disqueId) {
+		try {
+			String sql = "SELECT * FROM `chansons` WHERE disqueId = ? ";
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setString(1, disqueId);
+			ResultSet resultSet = statement.executeQuery();
+			List<Chanson> chansons = new ArrayList<>();
+			if (resultSet.next()) {
+				String nom = resultSet.getString("nom");
+				int dureeEnSecondes = resultSet.getInt("dureeEnSecondes");
+				Chanson chanson = new Chanson(nom, dureeEnSecondes);
+				chansons.add(chanson);
+				return chansons;
+			} else {
+				return null;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException("Impossible de réaliser l(es) opération(s)", e);
+		}
+	}*/
+
+	/*
 	public List<Disque> findByName(String nom) {
 		try {
 			String sql = "SELECT * FROM `disques` where lower(nom) = lower(?)";
@@ -119,5 +139,5 @@ public class DisqueDAO {
 		} catch (SQLException e) {
 			throw new RuntimeException("Aucun produit effacé");
 		}
-	}
+	}*/
 }

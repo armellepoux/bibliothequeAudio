@@ -70,4 +70,11 @@ public class Disque
 				chanson.afficher();
 		}
 	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "DISQUE ["+ codeBarre + "] " + nom + ", durée: " + getDuree() ;
+	}
 }
